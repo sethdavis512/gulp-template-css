@@ -3,18 +3,20 @@
     "version": "0.0.1",
     "description": "",
     "main": "index.js",
-    "dependencies": {},
     "devDependencies": {
         "autoprefixer": "^9.7.3",
         "browser-sync": "^2.26.7",
-        "gulp": "^4.0.2",
         "gulp-clean-css": "^4.2.0",
         "gulp-postcss": "^8.0.0",
         "gulp-sass": "^4.0.2",
+        "gulp-sourcemaps": "^2.6.5",
+        "gulp": "^4.0.2",
         "node-sass": "^4.13.0"
     },
     "scripts": {
-        "start": "gulp"
+        "build": "NODE_ENV=production gulp",
+        "compile:scss": "gulp scss",
+        "dev": "gulp"
     },
     "author": "Seth Davis",
     "license": "MIT",
@@ -23,5 +25,8 @@
         "plugins": {
             "autoprefixer": {}
         }
-    }
+    },
+    "browserslist": [
+        "last 2 version"
+    ]
 }

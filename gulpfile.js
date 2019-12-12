@@ -1,29 +1,63 @@
-const { dest, src, parallel, watch } = require('gulp');
+const { dest, src, series, watch } = require('gulp');
+const autoprefixer = require('autoprefixer');
+const browserSync = require('browser-sync').create();
+const cleanCSS = require('gulp-clean-css');
 const postcss = require('gulp-postcss');
 const sass = require('gulp-sass');
-const cleanCSS = require('gulp-clean-css');
-const browserSync = require('browser-sync').create();
+const sourcemaps = require('gulp-sourcemaps');
 
 sass.compiler = require('node-sass');
 
+const Paths = {
+    BASE_PATH: './',
+    SCSS: {
+        SRC: 'src/*.scss',
+        DST: 'dst/'
+    },
+    HTML: './*.html'
+}
+
+const browserSyncConfig = {
+    server: {
+        baseDir: Paths.BASE_PATH
+    }
+};
+
+const cleanCSSConfig = {
+    compatibility: 'ie8'
+};
+
 function scss() {
-    return src('src/*.scss')
+    return src(Paths.SCSS.SRC)
+        .pipe(sourcemaps.init())
         .pipe(sass().on('error', sass.logError))
-        .pipe(postcss())
-        .pipe(cleanCSS({ compatibility: 'ie8' }))
+        .pipe(sourcemaps.write())
         .pipe(dest('dst/'))
         .pipe(browserSync.stream());
 }
 
 function browser() {
-    browserSync.init({
-        server: {
-            baseDir: './'
-        }
-    });
+    browserSync.init(browserSyncConfig);
 
-    watch('src/*.scss', scss);
-    watch('./*.html').on('change', browserSync.reload);
+    watch(Paths.SCSS.SRC, scss);
+    watch(Paths.HTML).on('change', browserSync.reload);
 }
 
-exports.default = parallel(browser, scss);
+function build() {
+    const plugins = [
+        autoprefixer()
+    ];
+    return src(Paths.SCSS.SRC)
+        .pipe(sass().on('error', sass.logError))
+        .pipe(postcss(plugins))
+        .pipe(cleanCSS(cleanCSSConfig))
+        .pipe(dest(Paths.SCSS.DST));
+}
+
+exports.scss = scss;
+
+if (process.env.NODE_ENV === 'production') {
+    exports.default = build;
+} else {
+    exports.default = series(scss, browser);
+}
