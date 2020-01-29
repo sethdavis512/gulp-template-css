@@ -5,6 +5,7 @@ const cleanCSS = require('gulp-clean-css');
 const postcss = require('gulp-postcss');
 const sass = require('gulp-sass');
 const sourcemaps = require('gulp-sourcemaps');
+const rename = require('gulp-rename');
 
 sass.compiler = require('node-sass');
 
@@ -51,6 +52,7 @@ function build() {
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss(plugins))
         .pipe(cleanCSS(cleanCSSConfig))
+        .pipe(rename('bundle.min.css'))
         .pipe(dest(Paths.SCSS.DST));
 }
 
