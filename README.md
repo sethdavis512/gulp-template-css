@@ -5,5 +5,5 @@ Write in SCSS; compiles to CSS.
 BrowserSync watches for changes and refreshes browser.  
 
 ```
-npm i & npm run dev
+npm i && npm run dev
 ```
