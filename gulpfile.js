@@ -52,7 +52,7 @@ function build() {
         .pipe(sass().on('error', sass.logError))
         .pipe(postcss(plugins))
         .pipe(cleanCSS(cleanCSSConfig))
-        .pipe(rename('bundle.min.css'))
+        .pipe(rename('styles.min.css'))
         .pipe(dest(Paths.SCSS.DST));
 }
 
